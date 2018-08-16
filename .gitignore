@@ -3,6 +3,9 @@
 # Ignore jEdit's temp files
 *~
 
+# Ignore jEdit's .marks files
+*.marks
+
 # A trailing "/**" matches everything inside. For example, "abc/**" matches
 # all files inside directory "abc", relative to the location
 # of the .gitignore file, with infinite depth
