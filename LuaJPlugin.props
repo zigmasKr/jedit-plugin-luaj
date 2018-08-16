@@ -1,0 +1,29 @@
+# ::mode=properties:: #
+# Basic Plugin Information {{{
+plugin.luaj.LuaJPlugin.name=LuaJPlugin
+plugin.luaj.LuaJPlugin.activate=startup
+plugin.luaj.LuaJPlugin.author=Zigmantas Kryzius
+plugin.luaj.LuaJPlugin.description=Provides LuaJ to jEdit.
+plugin.luaj.LuaJPlugin.docs=docs/index.html
+plugin.luaj.LuaJPlugin.longdescription=description.html
+plugin.luaj.LuaJPlugin.usePluginHome=true
+plugin.luaj.LuaJPlugin.version=1.0.0
+# }}} Basic Plugin Information
+
+# Dependencies {{{
+plugin.luaj.LuaJPlugin.depend.0=jedit 05.03.00.00
+plugin.luaj.LuaJPlugin.depend.1=jdk 1.8
+plugin.luaj.LuaJPlugin.depend.2=plugin classpath.ClasspathPlugin 1.0
+plugin.luaj.LuaJPlugin.depend.3=optional plugin console.ConsolePlugin 4.4.2
+# }}} Dependencies
+
+# Options {{{
+plugin.luaj.LuaJPlugin.option-group=luaj-provider
+options.luaj-provider.label=Provider
+options.luaj-provider.code=new luaj.LuaJProviderOptionPane();
+options.luaj.luaj-core-jar=luaj-jse-3.0.1.jar
+
+options.luaj.included-core-label=Included (3.0.1)
+options.luaj.choose-label=Choose jar
+
+#}}}

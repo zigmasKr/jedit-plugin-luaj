@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<book>
+	<bookinfo>
+		<title>LuaJ Plugin</title>
+		<author>
+			<firstname>Zigmantas</firstname><surname>Kry&#382;ius</surname>
+		</author>
+	</bookinfo>
+	<chapter id="overview"><title>Overview</title>
+		<para>
+			This plugin comes packaged with LuaJ. LuaJ is a Lua interpreter based on the 5.2.x version of Lua.
+			See <ulink url="http://www.luaj.org/luaj/3.0/README.html"> http://www.luaj.org/luaj/3.0/README.html</ulink>.
+		</para>
+		<para>
+			The jar provided by this plugin is luaj-jse-3.0.1.jar.
+			Different jar can be used by configuring the plugin in the Plugin Options window.
+		</para>
+	</chapter>
+	<chapter id="console"><title>Using with Console</title>
+		<para>
+			If the Console plugin is installed, this plugin automatically sets the
+			system environment variable LUAJ to the path of luaj.
+			So to run a script called 'script.lua', cd to the file's directory (cd $d) and run:
+		</para>
+		<para><programlisting>
+			java -cp "$LUAJ" lua script.lua
+		</programlisting></para>
+		<para>
+			Alternatively, this plugin installs a LuaJ commando file, so scripts can
+			be run by setting it as the interpreter for LuaJ files (Plugin Options -> Console
+			-> Compile &amp; Run), and then Plugins -> Console -> Run Current Buffer.
+		</para>
+		<para>
+		LuaJPlugin.jar is necessary for the plugins LuaJShell and LuaJShellSE (LuaJ shell for scripting engine).
+		With LuaJShellSE  plugin installed, the LuaJ script handler is available so one can write 
+		jEdit macros in LuaJ and test them in the LuaJ scripting engine shell.
+		</para>
+	</chapter>
+</book>
