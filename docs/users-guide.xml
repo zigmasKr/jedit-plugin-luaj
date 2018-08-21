@@ -32,8 +32,13 @@
 		</para>
 		<para>
 		LuaJPlugin.jar is necessary for the plugins LuaJShell and LuaJShellSE (LuaJ shell for scripting engine).
-		With LuaJShellSE  plugin installed, the LuaJ script handler is available so one can write 
+		With LuaJShellSE  plugin installed, the LuaJ script handler is available so one can write
 		jEdit macros in LuaJ and test them in the LuaJ scripting engine shell.
 		</para>
 	</chapter>
+	<chapter id="contacts"><title>Contacts</title>
+		<para>
+		Author's contact: <email id="email">zigmas.kr@gmail.com</email>.
+		</para>
+  </chapter>
 </book>

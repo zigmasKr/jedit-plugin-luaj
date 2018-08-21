@@ -22,7 +22,8 @@ local label = luajava.newInstance("javax.swing.JLabel", icon)
 
 -- add the main pane to the main content
 content:add(label, borderLayout.CENTER)
-frame:setDefaultCloseOperation(jframe.EXIT_ON_CLOSE)
+-- frame:setDefaultCloseOperation(jframe.EXIT_ON_CLOSE)
+frame:setDefaultCloseOperation(jframe.DISPOSE_ON_CLOSE)
 frame:pack()
 
 -- simple animation framework
