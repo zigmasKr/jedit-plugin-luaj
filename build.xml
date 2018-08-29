@@ -84,7 +84,6 @@
 			<or>
 				<filename name="*.props" />
 				<filename name="*.xml" />
-				<!-- <filename name="${build.support}/plugin-build.xml" />  -->
 			</or>
 			<not>
 				<filename name="build.xml" />
