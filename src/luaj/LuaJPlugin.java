@@ -51,8 +51,8 @@ public class LuaJPlugin extends EditPlugin {
 	// 'included...' jar may be placed in the jEdit settings directory:
 	public static final String coreInSettings =
 		MiscUtilities.constructPath(dirSettings, "jars/" + nameCore);
-
-	// 'included...' jar may be placed in the jEdit install directory, too:
+	// OR	
+	// 'included...' jar may be placed in the jEdit install directory:
 	public static final String coreInHome =
 		MiscUtilities.constructPath(dirHome, "jars/" + nameCore);
 
@@ -67,31 +67,21 @@ public class LuaJPlugin extends EditPlugin {
 		}
 		return included;
 	}
-
-	public static String includedCore = findIncluded(coreInSettings, coreInHome);
 	
-	private String installedCore = null;
+	public static String includedCore = findIncluded(coreInSettings, coreInHome);
+	public static String workingCore = null;
 
 	public void start() {
-		// IF path by the property does not exist,
-		// the property is set to null
-		File byProperty = new File(jEdit.getProperty(propCorePath));
-		if (!byProperty.exists()) {
-			jEdit.setProperty(propCorePath, null);
-		}
-
-		// IF core property is not defined,
-		// it is set to 'included...' jar
+		// IF property is null, OR path by the property does not exist,
+		// the property is set to 'included...'
+		File pathCore = new File(jEdit.getProperty(propCorePath));
+		
 		if (jEdit.getProperty(propCorePath) == null) {
 			jEdit.setProperty(propCorePath, includedCore);
-		}
-
-		// ELSE core is taken by property,
-		// included jar is unloaded, installed jar is loaded:
-		installedCore = getLuaJCore();
-		if (!installedCore.equals(includedCore)) {
-			jEdit.removePluginJAR(jEdit.getPluginJAR(includedCore), false);
-			jEdit.addPluginJAR(installedCore);
+			workingCore = includedCore;
+		} else if (!pathCore.exists()) {
+			jEdit.setProperty(propCorePath, includedCore);
+			workingCore = includedCore;
 		}
 
 		setVars();
@@ -121,13 +111,13 @@ public class LuaJPlugin extends EditPlugin {
 	public void stop() {}
 
 	/**
-	 * Set the loaded LuaJ core jar
+	 * Set the loaded LuaJ core jar; method used in ..ProviderOptionPane
 	 */
 	public void setLuaJCore(String path) {
 		jEdit.setProperty(propCorePath, path);
-		jEdit.removePluginJAR(jEdit.getPluginJAR(installedCore), false);
+		jEdit.removePluginJAR(jEdit.getPluginJAR(workingCore), false);
 		jEdit.addPluginJAR(path);
-		installedCore = path;
+		workingCore = path;
 	}
 
 	/**
@@ -158,4 +148,4 @@ public class LuaJPlugin extends EditPlugin {
 
 }
 
-/* :folding=explicit:collapseFolds=1:tabSize=2:indentSize=2:noTabs=false: */
+/* :folding=explicit:collapseFolds=1:tabSize=4:indentSize=4:noTabs=false: */

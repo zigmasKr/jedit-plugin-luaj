@@ -7,7 +7,7 @@ plugin.luaj.LuaJPlugin.description=Provides LuaJ to jEdit.
 plugin.luaj.LuaJPlugin.docs=docs/index.html
 plugin.luaj.LuaJPlugin.longdescription=description.html
 plugin.luaj.LuaJPlugin.usePluginHome=true
-plugin.luaj.LuaJPlugin.version=1.0.0
+plugin.luaj.LuaJPlugin.version=1.1
 # }}} Basic Plugin Information
 
 # Dependencies {{{

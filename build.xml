@@ -38,7 +38,7 @@
 	xsltproc: if you plan on using docbook
 	-->
 	<property name="docs-proc.target" value="xsltproc" />
-	<property name="plugin.version" value="1.0.0" />
+	<property name="plugin.version" value="1.1" />
 
 	<!-- jEdit installation properties. -->
 	<!-- already defined in build.properties:
