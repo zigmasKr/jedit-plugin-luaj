@@ -37,12 +37,12 @@ import org.gjt.sp.util.IOUtilities;
 //}}}
 
 public class LuaJPlugin extends EditPlugin {
-	
+
 	/** Name for plugin manager */
 	public final static String NAME = "LuaJPlugin";
 
 	public static final String propCorePath = "options.luaj.luaj-core-path";
-	
+
 	public static final String nameCore = jEdit.getProperty("options.luaj.luaj-core-jar");
 
 	public static final String dirSettings = jEdit.getSettingsDirectory();
@@ -51,7 +51,7 @@ public class LuaJPlugin extends EditPlugin {
 	// 'included...' jar may be placed in the jEdit settings directory:
 	public static final String coreInSettings =
 		MiscUtilities.constructPath(dirSettings, "jars/" + nameCore);
-	// OR	
+	// OR
 	// 'included...' jar may be placed in the jEdit install directory:
 	public static final String coreInHome =
 		MiscUtilities.constructPath(dirHome, "jars/" + nameCore);
@@ -67,7 +67,7 @@ public class LuaJPlugin extends EditPlugin {
 		}
 		return included;
 	}
-	
+
 	public static String includedCore = findIncluded(coreInSettings, coreInHome);
 	public static String workingCore = null;
 
@@ -75,13 +75,15 @@ public class LuaJPlugin extends EditPlugin {
 		// IF property is null, OR path by the property does not exist,
 		// the property is set to 'included...'
 		File pathCore = new File(jEdit.getProperty(propCorePath));
-		
 		if (jEdit.getProperty(propCorePath) == null) {
 			jEdit.setProperty(propCorePath, includedCore);
 			workingCore = includedCore;
 		} else if (!pathCore.exists()) {
 			jEdit.setProperty(propCorePath, includedCore);
 			workingCore = includedCore;
+		} else {
+			// ELSE jEdit.getProperty(propCorePath) points to working core.
+			workingCore = jEdit.getProperty(propCorePath);
 		}
 
 		setVars();
