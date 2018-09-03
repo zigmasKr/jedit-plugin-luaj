@@ -74,16 +74,18 @@ public class LuaJPlugin extends EditPlugin {
 	public void start() {
 		// IF property is null, OR path by the property does not exist,
 		// the property is set to 'included...'
-		File pathCore = new File(jEdit.getProperty(propCorePath));
 		if (jEdit.getProperty(propCorePath) == null) {
 			jEdit.setProperty(propCorePath, includedCore);
 			workingCore = includedCore;
-		} else if (!pathCore.exists()) {
-			jEdit.setProperty(propCorePath, includedCore);
-			workingCore = includedCore;
 		} else {
-			// ELSE jEdit.getProperty(propCorePath) points to working core.
-			workingCore = jEdit.getProperty(propCorePath);
+			File pathCore = new File(jEdit.getProperty(propCorePath));
+			if (!pathCore.exists()) {
+				jEdit.setProperty(propCorePath, includedCore);
+				workingCore = includedCore;
+			} else {
+				// ELSE jEdit.getProperty(propCorePath) points to working core.
+				workingCore = jEdit.getProperty(propCorePath);
+			}
 		}
 
 		setVars();
