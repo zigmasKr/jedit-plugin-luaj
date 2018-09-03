@@ -41,21 +41,22 @@ public class LuaJPlugin extends EditPlugin {
 	/** Name for plugin manager */
 	public final static String NAME = "LuaJPlugin";
 
-	public static final String propertyCorePath = "options.luaj.luaj-core-path";
+	public static final String propCorePath = "options.luaj.luaj-core-path";
+	
 	public static final String nameCore = jEdit.getProperty("options.luaj.luaj-core-jar");
 
-	public static final String settingsJEdit = jEdit.getSettingsDirectory();
-	public static final String homeJEdit = jEdit.getJEditHome();
+	public static final String dirSettings = jEdit.getSettingsDirectory();
+	public static final String dirHome = jEdit.getJEditHome();
 
 	// 'included...' jar may be placed in the jEdit settings directory:
 	public static final String coreInSettings =
-		MiscUtilities.constructPath(settingsJEdit, "jars/" + nameCore);
+		MiscUtilities.constructPath(dirSettings, "jars/" + nameCore);
 
 	// 'included...' jar may be placed in the jEdit install directory, too:
-	public static final String coreInJEdit =
-		MiscUtilities.constructPath(homeJEdit, "jars/" + nameCore);
+	public static final String coreInHome =
+		MiscUtilities.constructPath(dirHome, "jars/" + nameCore);
 
-	private static String findIncludedJar(String settings, String home) {
+	private static String findIncluded(String settings, String home) {
 		String included = null;
 		File inSettings = new File(settings);
 		File inHome = new File(home);
@@ -67,15 +68,22 @@ public class LuaJPlugin extends EditPlugin {
 		return included;
 	}
 
-	public static String includedCore = findIncludedJar(coreInSettings, coreInJEdit);
+	public static String includedCore = findIncluded(coreInSettings, coreInHome);
+	
 	private String installedCore = null;
 
 	public void start() {
+		// IF path by the property does not exist,
+		// the property is set to null
+		File byProperty = new File(jEdit.getProperty(propCorePath));
+		if (!byProperty.exists()) {
+			jEdit.setProperty(propCorePath, null);
+		}
 
 		// IF core property is not defined,
 		// it is set to 'included...' jar
-		if (jEdit.getProperty(propertyCorePath) == null) {
-			jEdit.setProperty(propertyCorePath, includedCore);
+		if (jEdit.getProperty(propCorePath) == null) {
+			jEdit.setProperty(propCorePath, includedCore);
 		}
 
 		// ELSE core is taken by property,
@@ -116,7 +124,7 @@ public class LuaJPlugin extends EditPlugin {
 	 * Set the loaded LuaJ core jar
 	 */
 	public void setLuaJCore(String path) {
-		jEdit.setProperty(propertyCorePath, path);
+		jEdit.setProperty(propCorePath, path);
 		jEdit.removePluginJAR(jEdit.getPluginJAR(installedCore), false);
 		jEdit.addPluginJAR(path);
 		installedCore = path;
@@ -136,7 +144,7 @@ public class LuaJPlugin extends EditPlugin {
 	 * Returns the location of the LuaJ core jar
 	 */
 	public String getLuaJCore() {
-		return jEdit.getProperty(propertyCorePath);
+		return jEdit.getProperty(propCorePath);
 	}
 
 	/**
