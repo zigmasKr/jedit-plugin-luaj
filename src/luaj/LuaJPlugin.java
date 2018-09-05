@@ -56,7 +56,7 @@ public class LuaJPlugin extends EditPlugin {
 	public static final String coreInHome =
 		MiscUtilities.constructPath(dirHome, "jars/" + nameCore);
 
-	private static String findIncluded(String settings, String home) {
+	private static String defineIncluded(String settings, String home) {
 		String included = null;
 		File inSettings = new File(settings);
 		File inHome = new File(home);
@@ -67,27 +67,35 @@ public class LuaJPlugin extends EditPlugin {
 		}
 		return included;
 	}
+	
+	private String defineWorking(String propJarPath, String includedJar) {
+		String workingJar;
+		File pathJar;
+		if (!(jEdit.getProperty(propJarPath) == null)) {
+			pathJar = new File(jEdit.getProperty(propJarPath));
+			if (pathJar.exists()) {
+				// jEdit.getProperty(propJarPath) points to working *.jar.
+				workingJar = jEdit.getProperty(propJarPath);
+			} else {
+				// IF path by the property does not exist, ...
+				jEdit.setProperty(propJarPath, includedJar);
+				workingJar = includedJar;
+			}
+		} else {
+			// OR property is null
+			// the property is set to 'included...'
+			jEdit.setProperty(propJarPath, includedJar);
+			workingJar = includedJar;
+		}
+		return workingJar;
+	}
 
-	public static String includedCore = findIncluded(coreInSettings, coreInHome);
-	public static String workingCore = null;
+	public static String includedCore = defineIncluded(coreInSettings, coreInHome);
+	
+	public String workingCore = defineWorking(propCorePath, includedCore);
 
 	public void start() {
-		// IF property is null, OR path by the property does not exist,
-		// the property is set to 'included...'
-		if (jEdit.getProperty(propCorePath) == null) {
-			jEdit.setProperty(propCorePath, includedCore);
-			workingCore = includedCore;
-		} else {
-			File pathCore = new File(jEdit.getProperty(propCorePath));
-			if (!pathCore.exists()) {
-				jEdit.setProperty(propCorePath, includedCore);
-				workingCore = includedCore;
-			} else {
-				// ELSE jEdit.getProperty(propCorePath) points to working core.
-				workingCore = jEdit.getProperty(propCorePath);
-			}
-		}
-
+		
 		setVars();
 
 		SwingUtilities.invokeLater(new Runnable() {

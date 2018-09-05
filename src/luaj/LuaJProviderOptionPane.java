@@ -89,6 +89,8 @@ public class LuaJProviderOptionPane extends AbstractOptionPane {
 		} else {
 			plugin.setLuaJCore(jtxtCorePath.getText());
 		}
+		
+		plugin.setVars();
 	}
 
 	class ButtonListener implements ActionListener {
