@@ -67,7 +67,7 @@ public class LuaJPlugin extends EditPlugin {
 		}
 		return included;
 	}
-	
+
 	private String defineWorking(String propJarPath, String includedJar) {
 		String workingJar;
 		File pathJar;
@@ -90,12 +90,15 @@ public class LuaJPlugin extends EditPlugin {
 		return workingJar;
 	}
 
-	public static String includedCore = defineIncluded(coreInSettings, coreInHome);
-	
-	public String workingCore = defineWorking(propCorePath, includedCore);
+	public static String includedCore;
+
+	public String workingCore;
 
 	public void start() {
-		
+		includedCore = defineIncluded(coreInSettings, coreInHome);
+
+		workingCore = defineWorking(propCorePath, includedCore);
+
 		setVars();
 
 		SwingUtilities.invokeLater(new Runnable() {
