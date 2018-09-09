@@ -9,12 +9,10 @@ package luaj;
 
 //{{{ Imports
 import luaj.LuaJPlugin;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FilenameFilter;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,7 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.JSeparator;
+import java.io.File;
+import java.io.FilenameFilter;
 import org.gjt.sp.jedit.AbstractOptionPane;
 import org.gjt.sp.jedit.EditPlugin;
 import org.gjt.sp.jedit.GUIUtilities;
@@ -38,10 +37,11 @@ public class LuaJProviderOptionPane extends AbstractOptionPane {
 	// included: included into the plugin's library
 	// custom: chosen via plugin's option pane
 
-	private JRadioButton btnCoreIncluded;
-	private JRadioButton btnCoreCustom;
-	private JTextField jtxtCorePath;
-	private JButton btnCoreBrowse;
+	private JRadioButton btnIncludedCore;
+	private JRadioButton btnCustomCore;
+	private JTextField jtxtIncludedCorePath;
+	private JTextField jtxtCustomCorePath;
+	private JButton btnBrowseCore;
 
 	private LuaJPlugin plugin;
 
@@ -50,46 +50,103 @@ public class LuaJProviderOptionPane extends AbstractOptionPane {
 		plugin = (LuaJPlugin) jEdit.getPlugin("luaj.LuaJPlugin");
 	}
 
+	private JPanel buildIncludeCustomPanel(
+	   ButtonGroup groupBtn,
+	   JRadioButton btnIncluded,
+	   JRadioButton btnCustom,
+	   JButton btnBrowse,
+	   JTextField jtxtIncluded,
+	   JTextField jtxtCustom
+	   ) {
+	   groupBtn.add(btnIncluded);
+		groupBtn.add(btnCustom);
+		//
+	   JPanel panel = new JPanel();
+		GridBagLayout gridbag = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		panel.setLayout(gridbag);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.WEST;
+		//
+		c.weightx = 0.02;
+		c.gridx = 0;
+		c.gridy = 0;
+		gridbag.setConstraints(btnIncluded, c);
+		panel.add(btnIncluded);
+		//
+		c.weightx = 1.0;
+		c.gridx = 1;
+		c.gridy = 0;
+		gridbag.setConstraints(jtxtIncluded, c);
+		panel.add(jtxtIncluded);
+		//
+		c.weightx = 0.02;
+		c.gridx = 0;
+		c.gridy = 1;
+		gridbag.setConstraints(btnCustom, c);
+		panel.add(btnCustom);
+		//
+		c.gridx = 1;
+		c.gridy = 1;
+		gridbag.setConstraints(jtxtCustom, c);
+		panel.add(jtxtCustom);
+		//
+		c.weightx = 0.02;
+		c.gridx = 2;
+		c.gridy = 1;
+		gridbag.setConstraints(btnBrowse, c);
+		panel.add(btnBrowse);
+		//
+		return panel;
+	}
+
 	protected void _init() {
 		ButtonListener listener = new ButtonListener();
-
 		// Core
-		JPanel panelCore = new JPanel();
-		panelCore.setLayout(new BoxLayout(panelCore, BoxLayout.X_AXIS));
-		panelCore.add(btnCoreIncluded =
-			new JRadioButton(jEdit.getProperty("options.luaj.included-core-label")));
-		panelCore.add(btnCoreCustom =
-			new JRadioButton(jEdit.getProperty("options.luaj.choose-label")));
+		// ========
 		ButtonGroup groupCore = new ButtonGroup();
-		groupCore.add(btnCoreIncluded);
-		groupCore.add(btnCoreCustom);
-		panelCore.add(new JSeparator(JSeparator.VERTICAL));
-		panelCore.add(jtxtCorePath = new JTextField());
-		btnCoreBrowse = new JButton(jEdit.getProperty("vfs.browser.browse.label"));
-		btnCoreBrowse.addActionListener(new BrowseListener(jtxtCorePath));
-		panelCore.add(btnCoreBrowse);
+		btnIncludedCore =
+			new JRadioButton(jEdit.getProperty("options.luaj.included-core-label"));
+		btnCustomCore =
+		   new JRadioButton(jEdit.getProperty("options.luaj.choose-label"));
+		btnBrowseCore = new JButton(jEdit.getProperty("vfs.browser.browse.label"));
+		//
+		btnIncludedCore.addActionListener(listener);
+		btnCustomCore.addActionListener(listener);
+		btnBrowseCore.addActionListener(new BrowseListener(jtxtCustomCorePath));
+		//
+		jtxtIncludedCorePath = new JTextField();
+		jtxtCustomCorePath = new JTextField();
+		//
+		JPanel panelCore = buildIncludeCustomPanel(
+		   groupCore, btnIncludedCore, btnCustomCore, btnBrowseCore,
+		   jtxtIncludedCorePath, jtxtCustomCorePath
+		   );
+		//
+		addComponent("Core:", panelCore);
+		//
 		String core = plugin.getLuaJCore();
 		if (core.equals(LuaJPlugin.includedCore)) {
-			btnCoreIncluded.setSelected(true);
-			jtxtCorePath.setEnabled(false);
-			btnCoreBrowse.setEnabled(false);
+		   jtxtIncludedCorePath.setText(LuaJPlugin.includedCore);
+		   jtxtCustomCorePath.setText("");
+			jtxtCustomCorePath.setEnabled(false);
+			btnIncludedCore.setSelected(true);
+			btnBrowseCore.setEnabled(false);
 		} else {
-			btnCoreCustom.setSelected(true);
-			jtxtCorePath.setText(core);
+			jtxtIncludedCorePath.setEnabled(false);
+			jtxtCustomCorePath.setText(core);
+			btnCustomCore.setSelected(true);
 		}
-		btnCoreIncluded.addActionListener(listener);
-		btnCoreCustom.addActionListener(listener);
-		addComponent("Core:", panelCore);
 	}
 
 	protected void _save() {
 
-		if (btnCoreIncluded.isSelected()) {
+		if (btnIncludedCore.isSelected()) {
 			plugin.setLuaJCore(LuaJPlugin.includedCore);
 		} else {
-			plugin.setLuaJCore(jtxtCorePath.getText());
+			plugin.setLuaJCore(jtxtCustomCorePath.getText());
 		}
-		
+
 		plugin.setVars();
 	}
 
@@ -97,12 +154,15 @@ public class LuaJProviderOptionPane extends AbstractOptionPane {
 
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
-			if (source == btnCoreIncluded) {
-				jtxtCorePath.setEnabled(false);
-				btnCoreBrowse.setEnabled(false);
-			} else if (source == btnCoreCustom) {
-				jtxtCorePath.setEnabled(true);
-				btnCoreBrowse.setEnabled(true);
+			if (source == btnIncludedCore) {
+			   jtxtIncludedCorePath.setEnabled(true);
+			   jtxtCustomCorePath.setText("");
+				jtxtCustomCorePath.setEnabled(false);
+				btnBrowseCore.setEnabled(false);
+			} else if (source == btnCustomCore) {
+			   jtxtIncludedCorePath.setEnabled(false);
+				jtxtCustomCorePath.setEnabled(true);
+				btnBrowseCore.setEnabled(true);
 			}
 		}
 
@@ -118,7 +178,7 @@ public class LuaJProviderOptionPane extends AbstractOptionPane {
 
 		public void actionPerformed(ActionEvent e) {
 			VFSFileChooserDialog dialog = new VFSFileChooserDialog(
-				jEdit.getActiveView(), System.getProperty("user.dir")+File.separator,
+				jEdit.getActiveView(), System.getProperty("user.dir") + File.separator,
 				VFSBrowser.OPEN_DIALOG, false, true);
 			String[] files = dialog.getSelectedFiles();
 			if (files != null && files.length == 1) {
